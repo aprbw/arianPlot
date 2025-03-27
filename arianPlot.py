@@ -49,20 +49,19 @@ def heatmap(data,
             Example: np.mean, np.std, np.median, np.min, np.max
     """
     if temporal_bin_size is None:
-        temporal_bin_size = 3 * data.shape[0] // data.shape[1]
+        temporal_bin_size = data.shape[0] // (3 * data.shape[1])
     # ahm = array of heat map
-    ahm = np.zeros((data.shape[0]//temporal_bin_size, data.shape[1], 3))
+    ahm = np.zeros((data.shape[1], data.shape[0]//temporal_bin_size, 3))
     for i in range(ahm.shape[0]):
-        ahm[i,:,0] = red_aggegation_function(data[i*temporal_bin_size:(i+1)*temporal_bin_size,:], 0)
-        ahm[i,:,1] = green_aggegation_function(data[i*temporal_bin_size:(i+1)*temporal_bin_size,:], 0)
-        ahm[i,:,2] = blue_aggegation_function(data[i*temporal_bin_size:(i+1)*temporal_bin_size,:], 0)
+        ahm[:,i,0] = red_aggegation_function(data[i*temporal_bin_size:(i+1)*temporal_bin_size,:], 0)
+        ahm[:,i,1] = green_aggegation_function(data[i*temporal_bin_size:(i+1)*temporal_bin_size,:], 0)
+        ahm[:,i,2] = blue_aggegation_function(data[i*temporal_bin_size:(i+1)*temporal_bin_size,:], 0)
     # min max noramlize ahm [0,1] per channel
     if is_norm:
-        ahm = (ahm - ahm.min((0,1))) / (ahm.max((0,1)) - ahm.min((0,1)))
-        ahm = np.transpose(ahm,(1,0,2))
+        ahm = (ahm - np.nanmin(ahm, (0,1))) / (np.nanmax(ahm, (0,1)) - np.nanmin(ahm, (0,1)))
     # sort
     if is_sort:
-        ai_sort = np.argsort(data.mean(0))
+        ai_sort = np.argsort(np.nanmean(data, 1))
         ahm = ahm[ai_sort,:,:]
     # plot
     if is_plot:
