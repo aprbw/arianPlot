@@ -52,20 +52,22 @@ def heatmap(data,
         temporal_bin_size = data.shape[0] // (3 * data.shape[1])
     # ahm = array of heat map
     ahm = np.zeros((data.shape[1], data.shape[0]//temporal_bin_size, 3))
-    for i in range(ahm.shape[0]):
+    for i in range(ahm.shape[1]):
         ahm[:,i,0] = red_aggegation_function(data[i*temporal_bin_size:(i+1)*temporal_bin_size,:], 0)
         ahm[:,i,1] = green_aggegation_function(data[i*temporal_bin_size:(i+1)*temporal_bin_size,:], 0)
         ahm[:,i,2] = blue_aggegation_function(data[i*temporal_bin_size:(i+1)*temporal_bin_size,:], 0)
     # min max noramlize ahm [0,1] per channel
     if is_norm:
-        ahm = (ahm - np.nanmin(ahm, (0,1))) / (np.nanmax(ahm, (0,1)) - np.nanmin(ahm, (0,1)))
+        ahm -= np.nanmin(ahm, 1)[:,None,:]
+        ahm /= np.nanmax(ahm, 1)[:,None,:]
     # sort
     if is_sort:
         ai_sort = np.argsort(np.nanmean(data, 1))
         ahm = ahm[ai_sort,:,:]
     # plot
     if is_plot:
-        plt.imshow(ahm, aspect='auto')
+        ahm = np.nan_to_num(ahm)
+        plt.imshow(ahm, aspect='auto', interpolation='none')
     return ahm
 
 def timeOfPeriod(l_data, n_period, labels=[], alpha_row=.05, alpha_mean=.6):
