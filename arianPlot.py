@@ -106,9 +106,10 @@ def timeOfPeriod(l_data, n_period, labels=[], alpha_row=.05, alpha_mean=.6):
                  )
     return latop
 
-def symlog(data):
+def symlog(data, base=10):
     # symmetric log for scaling data for data viz
+    # https://github.com/aprbw/arianPlot/blob/master/arianPlot.py
     data = data.copy()
-    data[data>10] = 9+np.log10(data[data>10])
-    data[data<-10] = -9-np.log10(-data[data<-10])
+    data[data>base] = base-1 + np.log10(data[data>base]) / np.log10(base)
+    data[data<-base] = -base+1 - np.log10(-data[data<-base]) / np.log10(base)
     return data
