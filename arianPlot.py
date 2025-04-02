@@ -109,6 +109,6 @@ def timeOfPeriod(l_data, n_period, labels=[], alpha_row=.05, alpha_mean=.6):
 def symlog(data):
     # symmetric log for scaling data for data viz
     data = data.copy()
-    data[data>10] = np.log10(data[data>10])
-    data[data<-10] = -np.log10(-data[data<-10])
+    data[data>10] = 9+np.log10(data[data>10])
+    data[data<-10] = -9-np.log10(-data[data<-10])
     return data
