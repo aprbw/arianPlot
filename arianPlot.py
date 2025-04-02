@@ -62,7 +62,7 @@ def heatmap(data,
         ahm /= np.nanmax(ahm, 1)[:,None,:]
     # sort
     if is_sort:
-        ai_sort = np.argsort(np.nanmean(data, 1))
+        ai_sort = np.argsort(np.nanmean(data, 0))
         ahm = ahm[ai_sort,:,:]
     # plot
     if is_plot:
