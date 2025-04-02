@@ -106,3 +106,8 @@ def timeOfPeriod(l_data, n_period, labels=[], alpha_row=.05, alpha_mean=.6):
                  )
     return latop
 
+def slsScaler(ax):
+    # symmetric, log, standard scaling.
+    ax = ax.copy()
+    ax[ax>10] = np.log10(ax[ax>10])
+    ax[ax<-10] = -np.log10(-ax[ax<-10])
